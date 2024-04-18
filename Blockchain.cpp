@@ -33,6 +33,7 @@ void Blockchain::printChain() const
                 std::cout<< "Amount: " << block.get_amount()<<std::endl;
                 std::cout<< "Nonce: " << block.get_nNonce()<<std::endl;
                 std::cout<< "Timestamp: "<< block.getCurrentTime()<< std::endl;
+                std::cout<< "Is Block Valid: "<< block.IsBlockValid(_vChain[i-1])<< std::endl;
             }
 
     }
