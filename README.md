@@ -22,5 +22,7 @@
 # Output:
 ## Add Transaction:
 ![](https://github.com/uv-goswami/Blockchain/blob/main/output/01_add_transaction.png)
+## View Blockchain:
+![](https://github.com/uv-goswami/Blockchain/blob/main/output/02_view_BlockChain.png)
 
 
