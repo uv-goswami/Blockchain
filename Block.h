@@ -43,6 +43,7 @@ class Block                                     //
             size_t get_nNonce() const;
             time_t getCurrentTime() const;
             
+            bool IsBlockValid(const Block& prevBlock) const;  //Validation 
 
             void MineBlock(size_t nDifficulty);
 
