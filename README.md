@@ -19,4 +19,6 @@
 # Usage:
 - Clone the repository to your local machine.
 - Complie the source file using a c++ complier(e.g., g++) to generate the executable.
+# Output:
+
 
