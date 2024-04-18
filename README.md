@@ -20,5 +20,7 @@
 - Clone the repository to your local machine.
 - Complie the source file using a c++ complier(e.g., g++) to generate the executable.
 # Output:
+## Add Transaction:
+![](https://github.com/uv-goswami/Blockchain/blob/main/output/01_add_transaction.png)
 
 
