@@ -1,88 +1,45 @@
-#include "Block.h"
-#include <sstream>
-#include <ctime> 
-#include "Sha256/sha256.h"
+#include "Blockchain.h"
 
-using namespace std;
-//Class constructor                                                                     Initializer list where member variables of the 'Block' class are initialized
-Block::Block(size_t nIndexin, const string &Sender, const string &Receiver, int amt) : _nIndex(nIndexin), _SenderKey(Sender), _ReceiverKey(Receiver), amount(amt)
+
+Blockchain::Blockchain()
     {
-        _nNonce = -1;
-        _CurrentTime = time(nullptr);
+        _vChain.emplace_back(Block(0, "Genesis Block", "  ", 0));       //adds a block to the chain vector 
+        _nDifficulty = 5;
     }
 
-string Block::getHash() const      // It retrieves and returns the hash of the block without modifying it 
-{
-    return _sHash;
-}
-
-int Block::get_amount()  const
-{
-    return amount;
-}
-
-size_t Block:: get_nNonce() const
+void Blockchain::AddBlock(Block bNew)           
     {
-        return _nNonce;
+        bNew.sPrevHash = _GetLastBlock().getHash();         // gets the hash of the last block in the chain
+        bNew.MineBlock(_nDifficulty);
+        _vChain.push_back(bNew);
     }
 
-string Block::get_ReceiverKey() const
+Block Blockchain:: _GetLastBlock() const
     {
-        return _ReceiverKey;
+        return _vChain.back();
     }
 
-string Block::get_SenderKey() const
+void Blockchain::printChain() const
     {
-        return _SenderKey;
-    }
-
-time_t Block::getCurrentTime() const
-    {
-        return _CurrentTime;
-    }
-
-size_t Block::get_nIndex() const
-    {
-        return _nIndex;
-    }
-
-
-
-
-void Block::MineBlock(size_t nDifficulty)
-    {
-        char cstr[nDifficulty + 1];             //Character array with size 'nDifficulty +1' to store characters for constructing strings
-        for(size_t i = 0; i < nDifficulty; ++i)     //Initializes ech element of 'cstr' with character '0'
+        for(size_t i =1; i<_vChain.size(); ++i)
             {
-                cstr[i] = '0';
+                const Block& block = _vChain[i];    //creates a constant reference to the block in the chain vector 
+                std::cout<< "************************************************************************************************"<< std::endl;
+                std::cout<< "Block: "<< block.get_nIndex()<< std::endl;
+                std::cout<< "Block Hash: " << block.getHash() << std::endl;
+                std::cout<< "Previous Hash: " << block.sPrevHash << std::endl;
+                std::cout<< "Sender: " << block.get_SenderKey()<<std::endl;
+                std::cout<< "Receiver: " << block.get_ReceiverKey()<<std::endl;
+                std::cout<< "Amount: " << block.get_amount()<<std::endl;
+                std::cout<< "Nonce: " << block.get_nNonce()<<std::endl;
+                std::cout<< "Timestamp: "<< block.getCurrentTime()<< std::endl;
+                std::cout<< "Is Block Valid: "<< block.IsBlockValid(_vChain[i-1])<< std::endl;
             }
 
-        cstr[nDifficulty] = '\0';       //Creates a string from the characters stored in 'cstr'
-
-        string str(cstr);       //sets character at index 'nDifficulty' to '\0' and converts 'cstr' to string 'str' to null terminator '\0' effectively terminating the string
-
-                std::cout << "******************************************************************************************************* "<< endl;
-                std::cout << "Your Transaction is in Process......." <<endl;
-        do
-            {   
-                _nNonce++;
-                _sHash = _CalculateHash();
-            }
-        while(_sHash.substr(0, nDifficulty) != str);
-        
-    
-        cout << "Current Hash: "<< _sHash << endl;
-        cout << "Previous Hash: " << sPrevHash << endl;
-        cout << "Sender: " <<_SenderKey << endl;
-        cout << "Receiver: " <<_ReceiverKey << endl;
-        cout << "Amount: " << amount << endl;
-        cout << "TimeStamp: " << _CurrentTime << endl;
     }
 
-inline string Block::_CalculateHash() const
-    {
-        stringstream ss;
-        ss << _nIndex << _CurrentTime << _nNonce << _SenderKey << _ReceiverKey << amount;
 
-        return sha256(ss.str());
+size_t Blockchain::getChainSize() const
+    {
+        return _vChain.size();
     }
