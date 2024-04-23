@@ -86,15 +86,15 @@ class Block                                     //
 
             Block(size_t nIndexIn, const string &Sender, const string &Receiver, int amt);  //Constructor
 
-            string getHash() const;
-            size_t get_nIndex() const;
-            string get_SenderKey() const;
-            string get_ReceiverKey() const;
-            int get_amount() const;
-            size_t get_nNonce() const;
-            time_t getCurrentTime() const;
+            string getHash() const;      // Returns Hash of the Block
+            size_t get_nIndex() const;   // Returns index
+            string get_SenderKey() const;   //returns public key of sender
+            string get_ReceiverKey() const;  //returns public key of receiver
+            int get_amount() const;      //returns the amount of the transaction
+            size_t get_nNonce() const;  //returns nonce(number used once
+            time_t getCurrentTime() const;     //returns the current timestamp of the block
             
-            bool IsBlockValid(const Block& prevBlock) const;
+            bool IsBlockValid(const Block& prevBlock) const;   //Returns true(1) or false(0)
 
             void MineBlock(size_t nDifficulty);
 
@@ -106,7 +106,11 @@ class Block                                     //
 - Private Members: These are the member variables of the 'Block' class, which are only accessible within the class itself. They        represent the characteristics of a block, such as its index, nonce value, current time, sender key, receiver key, transaction        amount, block hash, and a method to calculate the hash.
 - Public Memberds: 'sPrevHash' is a public member variable that represents the hash of the previous block in the blockchain. Can       be accessed from both within or outside the class.
 - Constructor: Block(size_t nIndexIn, const string &Sender, const string &Receiver, int amt):  is the constructor of the Block         class, which initializes a Block object with the provided parameters. Constructors are special member functions used to initialize   objects of a class. They have the same name as the class and are invoked automatically whenever an object of that class is created.
-    
+
+- 'time_t' is a data type represents time values. It is typically used to store time in seconds since the UNIX epoch (January 1, 1970).
+- 'size_t' is a unsigned data type used for representing sizes and indices of  objects in memory. It is frequently used to represent sizes, indices, and lengths of arrays, containers, and other data structures. It ensures compatibility across different platforms and compilers, as it's guaranteed to be able to represent the size of any object in memory .
+   * It is adviced not to use 'int' as 'int' may have different sizes on different compilers moreover 'int' can be both negative and positive which may allow negative values which is not feseable in context of memory sizes.
+- 'void' : is used as we don't want to return the value.
     
 
 
