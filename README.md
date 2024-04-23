@@ -111,7 +111,85 @@ class Block                                     //
 - 'size_t' is a unsigned data type used for representing sizes and indices of  objects in memory. It is frequently used to represent sizes, indices, and lengths of arrays, containers, and other data structures. It ensures compatibility across different platforms and compilers, as it's guaranteed to be able to represent the size of any object in memory .
    * It is adviced not to use 'int' as 'int' may have different sizes on different compilers moreover 'int' can be both negative and positive which may allow negative values which is not feseable in context of memory sizes.
 - 'void' : is used as we don't want to return the value.
+- 
+# Block.cpp
+```
+#include "Block.h"
+#include <sstream>
+#include <ctime> 
+#include "Sha256/sha256.h"
+```
+-Include Derivatives:
+   * '#include "Block.h"' this directive includes the header file named "Block.h" in the current source file
+   * '#include <sstream>' This directive includes the standard C++ header file <sstream>, which provides            facilities for handling string streams. It is commonly used for string manipulation and stream-based          input/output operations.
+   * '#include <ctime>' This directive includes the standard C++ header file <ctime>, which provides                functionality for working with date and time information. It includes declarations for various                functions and types related to time manipulation.
+   * '#include "Sha256/sha256.h"' This directive includes a custom header file named "sha256.h" located in          the "Sha256" directory relative to the current source file. This header file likely contains                  declarations related to the SHA256 hashing algorithm implementation, such as function prototypes or           class definitions.
+
+```
+Block::Block(size_t nIndexin, const string &Sender, const string &Receiver, int amt) : _nIndex(nIndexin), _SenderKey(Sender), _ReceiverKey(Receiver), amount(amt)
+```
+   -Constructor:
+   * The constructor Block::Block() initializes a Block object with specific values for its member variables.      It takes parameters nIndexin, Sender, Receiver, and amt, representing the index of the block, sender          key, receiver key, and transaction amount respectively.
+
+```
+void Block::MineBlock(size_t nDifficulty)
+    {
+        char cstr[nDifficulty + 1];             //Character array with size 'nDifficulty +1' to store characters for constructing strings
+        for(size_t i = 0; i < nDifficulty; ++i)     //Initializes ech element of 'cstr' with character '0'
+            {
+                cstr[i] = '0';
+            }
+
+        cstr[nDifficulty] = '\0';       //Creates a string from the characters stored in 'cstr'
+
+        string str(cstr);       //sets character at index 'nDifficulty' to '\0' and converts 'cstr' to string 'str' to null terminator '\0' effectively terminating the string
+
+                std::cout << "******************************************************************************************************* "<< endl;
+                std::cout << "Your Transaction is in Process......." <<endl;
+        do
+            {   
+                _nNonce++;
+                _sHash = _CalculateHash();
+            }
+        while(_sHash.substr(0, nDifficulty) != str);
+        
     
+        cout << "Current Hash: "<< _sHash << endl;
+        cout << "Previous Hash: " << sPrevHash << endl;
+        cout << "Sender: " <<_SenderKey << endl;
+        cout << "Receiver: " <<_ReceiverKey << endl;
+        cout << "Amount: " << amount << endl;
+        cout << "TimeStamp: " << _CurrentTime << endl;
+    }
+```
+
+- MineBlock:
+   *The Block::MineBlock() method is responsible for mining a block, i.e., finding a valid hash that              satisfies a certain difficulty level. It takes a parameter nDifficulty, which determines the number of        leading zeros required in the hash.
+      * It constructs a target string str with nDifficulty leading zeros
+      * It repeatedly increments the nonce _nNonce and recalculates the hash _sHash until the hash meets the          difficulty target specified by str.
+      * Once a valid hash is found, the method outputs information about the block including its hash, sender         and receiver keys, amount, and timestamp.
+
+   ```
+```
+bool Block::IsBlockValid(const Block& prevBlock) const          
+    {
+        return (sPrevHash == prevBlock._sHash) && (_sHash == _CalculateHash());
+    }
+``` 
+- IsBlockValid Method
+     *The Block::IsBlockValid() method checks whether a block is valid by verifying its hash and the previous       block's hash. It takes a parameter prevBlock representing the previous block in the blockchain
+     *It compares the stored previous hash sPrevHash with the hash of the previous block _sHash and checks if       the current hash _sHash matches the calculated hash using _CalculateHash()
+```
+string Block::_CalculateHash() const
+    {
+        stringstream ss;
+        ss << _nIndex << _CurrentTime << _nNonce << _SenderKey << _ReceiverKey << amount;       //Concatenate  into one string
+
+        return sha256(ss.str());        //returns SHA256 hash.
+    }
+```
+- _CalculateHash Method:
+  * The _CalculateHash() method is a private helper function used to calculate the hash of the block. It          constructs a string by concatenating various block attributes and calculates the SHA256 hash of this          string using the sha256() function.
 
 
 
