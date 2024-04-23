@@ -270,3 +270,12 @@ int main() {
 blockchain.AddBlock(Block(blockchain.getChainSize(), sender, receiver, amount));
 ```
 - this line of code creates a new block with the transaction details provided by the user and adds it to the blockchain.
+
+  # To Compile Run
+```
+g++ -o blockchain Block.cpp Blockchain.cpp SHA256/sha256.cpp main.cpp
+```
+# To Run use:
+```
+./blockchain.exe
+```
