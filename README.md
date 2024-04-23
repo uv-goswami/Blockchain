@@ -190,7 +190,83 @@ string Block::_CalculateHash() const
 ```
 - _CalculateHash Method:
   * The _CalculateHash() method is a private helper function used to calculate the hash of the block. It          constructs a string by concatenating various block attributes and calculates the SHA256 hash of this          string using the sha256() function.
+ 
+# Blockchain.h
+```
+#include <cstdint>
+#include <vector>
+#include "Block.h"
+
+using namespace std;
+
+class Blockchain
+    {
+        private:
+            size_t _nDifficulty;      //Represents the difficulty level of mining in the blockchain
+            vector<Block> _vChain;     // Represents the chain of blocks in the blockchain.
+
+            Block _GetLastBlock() const      //A private member function that returns the last block in the chain.
+
+        public:
+            Blockchain();
+            void printChain() const;
+            size_t getChainSize() const;
+            void AddBlock(Block bNew);
 
 
+    };
+```
 
+- Include Derivatives
+  * #include <cstdint>: This directive includes the standard C++ header file <cstdint>, which provides            definitions for fixed-size integer types.
+  * #include <vector>: This directive includes the standard C++ header file <vector>, which provides the 
+    vector container class template for dynamic arrays.
 
+- Public Members:
+  * Blockchain(): Constructor of the Blockchain class.
+  * void printChain() const;: Public member function to print the contents of the blockchain.
+  * size_t getChainSize() const;: Public member function to get the size of the blockchain
+  * void AddBlock(Block bNew);: Public member function to add a new block to the blockchain.
+
+    
+# Blockchain.cpp
+
+```
+Blockchain::Blockchain()
+    {
+        _vChain.emplace_back(Block(0, "Genesis Block", "  ", 0));       //adds a block to the chain vector 
+        _nDifficulty = 5;      //Sets the difficulty level _nDifficulty to 5.
+    }
+```
+- Constructor (Blockchain::Blockchain()):
+  *Initializes a new blockchain by adding the genesis block to the chain vector _vChain.
+
+```
+void Blockchain::AddBlock(Block bNew)           
+    {
+        bNew.sPrevHash = _GetLastBlock().getHash();         // gets the hash of the last block in the chain
+        bNew.MineBlock(_nDifficulty);    //Mines the new block with the specified difficulty level.
+        _vChain.push_back(bNew);      //Pushes the new block onto the chain vector _vChain.
+    }
+```
+- Add Block Function (Blockchain::AddBlock(Block bNew)):
+  * Adds a new block bNew to the blockchain
+ 
+# main.cpp
+```
+#include "Blockchain.h"
+#include <iostream>
+#include <string>
+```
+- Add the import Deravitives
+```
+int main() {
+    Blockchain blockchain;
+    }
+```
+- Creates an instance of the Blockchain class named blockchain.
+
+```
+blockchain.AddBlock(Block(blockchain.getChainSize(), sender, receiver, amount));
+```
+- this line of code creates a new block with the transaction details provided by the user and adds it to the blockchain.
